@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Notifications\PostApproved;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -21,6 +23,20 @@ class PostController extends Controller
         $posts = Post::all();
 
         return view('components.posts', ['posts' => $posts]);
+    }
+
+    public function approve(Post $post) {
+        $this->authorize('approve');
+
+        if (!$post->approved) {
+            $post->update([$post->approved = true]);
+
+            $details = ['message' => $post->title.'has been verified!'];
+
+            Auth::user()->notify(new PostApproved($details));
+        }
+
+        return response()->json(['approved' => $post->approved]);
     }
 
     /**

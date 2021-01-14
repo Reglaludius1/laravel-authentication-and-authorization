@@ -32,6 +32,8 @@ class AuthenticationController extends Controller
 
             $user->password = bcrypt($request->password);
 
+            $user->role = "user";
+
             $user->save();
 
             return redirect()->route('/');

@@ -29,5 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('see-owned-posts', function (User $user, User $owner) {
             return $user->role === "admin" || $user->id === $owner->id;
         });
+
+        Gate::define('approve', function (User $user) {
+            return $user->role === "admin";
+        });
     }
 }

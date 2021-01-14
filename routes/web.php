@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,10 @@ Route::resource('posts', PostController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('users/{user}/posts', [UserController::class, 'posts'])->name('users.posts');
+    Route::patch('posts/{post}/approve', [PostController::class, 'approve'])->name('posts.approve');
+
+    Route::get('/mail', [MailController::class, 'create'])->name('mail.create');
+    Route::post('/mail', [MailController::class, 'send'])->name('mail.send');
 
     Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
 });
